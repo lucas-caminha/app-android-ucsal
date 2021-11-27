@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,13 +27,14 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textViewResult = findViewById(R.id.text_view_result);
+        //textViewResult = findViewById(R.id.text_view_result);
 
         RetrofitBuilder builder = new RetrofitBuilder();
         Retrofit retrofit = builder.build();
@@ -45,9 +48,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
-                    textViewResult.setText("Code: " + response.code());
+                    //textViewResult.setText("Code: " + response.code());
                     return;
                 }
+
+                listView = findViewById(R.id.listView);
+
 
                 JsonObject moedasJSON = response.body();
 
@@ -55,13 +61,17 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println("Tamanho da Lista: " + moedas.size());
 
-                textViewResult.setText(moedasJSON.toString());
+                MoedasListAdapter adapter = new MoedasListAdapter(moedas,MainActivity.this);
+                //ArrayAdapter adapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,moedas);
+                listView.setAdapter(adapter);
+
+                //textViewResult.setText(moedasJSON.toString());
 
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                textViewResult.setText(t.getMessage());
+                //textViewResult.setText(t.getMessage());
             }
         });
 
