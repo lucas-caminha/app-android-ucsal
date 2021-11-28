@@ -11,14 +11,14 @@ import com.google.gson.annotations.SerializedName;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-@Entity(tableName = "emoeda")
+@Entity(tableName = "emoeda", primaryKeys = {"code", "codein", "create_date"})
 public class Moeda {
 
-    @PrimaryKey
     @NonNull
     @ColumnInfo(name = "code")
     @SerializedName("code")
     private String code;
+    @NonNull
     @ColumnInfo(name = "codein")
     @SerializedName("codein")
     private String codein;
@@ -46,6 +46,7 @@ public class Moeda {
     @ColumnInfo(name = "timestamp")
     @SerializedName("timestamp")
     private String timestamp;
+    @NonNull
     @ColumnInfo(name = "create_date")
     @SerializedName("create_date")
     private String create_date;

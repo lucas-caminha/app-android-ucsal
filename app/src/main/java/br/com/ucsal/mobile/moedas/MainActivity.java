@@ -2,12 +2,10 @@ package br.com.ucsal.mobile.moedas;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,6 +19,8 @@ import br.com.ucsal.mobile.moedas.endpoint.MoedasEndpoint;
 import br.com.ucsal.mobile.moedas.infra.AppDatabase;
 import br.com.ucsal.mobile.moedas.infra.RetrofitBuilder;
 import br.com.ucsal.mobile.moedas.model.Moeda;
+import br.com.ucsal.mobile.moedas.task.AsyncMoedaInsert;
+import br.com.ucsal.mobile.moedas.task.AsyncMoedaSelect;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +29,7 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
+    private List<Moeda> moedasDB = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +38,16 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-        RetrofitBuilder builder = new RetrofitBuilder();
-        Retrofit retrofit = builder.build();
-
+        Retrofit retrofit = new RetrofitBuilder().build();
         MoedasEndpoint apiMoedas = retrofit.create(MoedasEndpoint.class);
+
         Call<JsonObject> call = apiMoedas.getMoedas();
 
         call.enqueue(new Callback<JsonObject>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
                 if (!response.isSuccessful()){
                     Toast.makeText(MainActivity.this, response.code(), Toast.LENGTH_SHORT);
                     return;
@@ -55,18 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 JsonObject moedasJSON = response.body();
                 List<Moeda> moedas = converteJSonToObject(moedasJSON);
 
-
-                //ArrayAdapter adapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,moedas);
                 MoedasListAdapter adapter = new MoedasListAdapter(moedas,MainActivity.this);
                 listView.setAdapter(adapter);
 
-                AppDatabase db = AppDatabase.getInstance(MainActivity.this);
-
-                for(Moeda moeda : moedas){
-                    db.moedaDAO().insereMoeda(moeda);
-                }
-
-
+                new AsyncMoedaSelect(MainActivity.this, moedas).execute();
             }
 
             @Override
@@ -86,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
         for(String keyStr : moedasJSON.keySet()){
             Object keyValue = moedasJSON.get(keyStr);
             Moeda moeda = g.fromJson(keyValue.toString(), Moeda.class);
-            System.out.println("Moeda: " + moeda.toString());
             moedas.add(moeda);
         }
 
         return moedas;
     }
+
 }

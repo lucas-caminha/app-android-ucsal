@@ -11,7 +11,7 @@ import androidx.room.TypeConverters;
 import br.com.ucsal.mobile.moedas.DAO.MoedaDAO;
 import br.com.ucsal.mobile.moedas.model.Moeda;
 
-@Database(entities = Moeda.class, version = 1)
+@Database(entities = Moeda.class, version = 3)
 
 public abstract class AppDatabase extends RoomDatabase {
 
