@@ -54,10 +54,9 @@ public class MoedasListAdapter extends BaseAdapter {
         TextView var = v.findViewById(R.id.text5);
         TextView dtUltimaAtualizacao = v.findViewById(R.id.data_ultima_atualizacao);
 
-        codigo.setText("Código:" + moeda.getCode());
-        nome.setText("Nome: " + moeda.getName());
-        high.setText("Preço mais alto: " + moeda.getHigh());
-        low.setText("Preço mais baixo : " + moeda.getLow());
+        codigo.setText("Moeda: " + moeda.getCode() + " - " + moeda.getName());
+        high.setText("Cotação mais alta: " + moeda.getHigh());
+        low.setText("Cotação mais baixa : " + moeda.getLow());
         var.setText("Variação: " + moeda.getVarBid());
         dtUltimaAtualizacao.setText("Ultima atualização: " + moeda.getCreate_date());
 
