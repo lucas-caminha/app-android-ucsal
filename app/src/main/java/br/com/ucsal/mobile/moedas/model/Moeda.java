@@ -1,61 +1,64 @@
 package br.com.ucsal.mobile.moedas.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
+@Entity(tableName = "emoeda")
 public class Moeda {
 
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "code")
     @SerializedName("code")
     private String code;
+    @ColumnInfo(name = "codein")
     @SerializedName("codein")
     private String codein;
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     private String name;
+    @ColumnInfo(name = "high")
     @SerializedName("high")
-    private BigDecimal high;
+    private float high;
+    @ColumnInfo(name = "low")
     @SerializedName("low")
-    private BigDecimal low;
+    private float low;
+    @ColumnInfo(name = "varBid")
     @SerializedName("varBid")
-    private BigDecimal varBid;
+    private float varBid;
+    @ColumnInfo(name = "pctChange")
     @SerializedName("pctChange")
-    private BigDecimal pctChange;
+    private float pctChange;
+    @ColumnInfo(name = "big")
     @SerializedName("big")
-    private BigDecimal big;
+    private float big;
+    @ColumnInfo(name = "ask")
     @SerializedName("ask")
-    private BigDecimal ask;
+    private float ask;
+    @ColumnInfo(name = "timestamp")
     @SerializedName("timestamp")
     private String timestamp;
-    @SerializedName("createDate")
-    private Date createDate;
+    @ColumnInfo(name = "create_date")
+    @SerializedName("create_date")
+    private String create_date;
 
     public Moeda(){
     }
 
-    public Moeda(String code, String codein, String name,
-                 BigDecimal high, BigDecimal low, BigDecimal varBid,
-                 BigDecimal pctChange, BigDecimal big, BigDecimal ask,
-                 String timestamp, Date createDate) {
-        this.code = code;
-        this.codein = codein;
-        this.name = name;
-        this.high = high;
-        this.low = low;
-        this.varBid = varBid;
-        this.pctChange = pctChange;
-        this.big = big;
-        this.ask = ask;
-        this.timestamp = timestamp;
-        this.createDate = createDate;
-    }
-
+    @NonNull
     public String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(@NonNull String code) {
         this.code = code;
     }
 
@@ -75,51 +78,51 @@ public class Moeda {
         this.name = name;
     }
 
-    public BigDecimal getHigh() {
+    public float getHigh() {
         return high;
     }
 
-    public void setHigh(BigDecimal high) {
+    public void setHigh(float high) {
         this.high = high;
     }
 
-    public BigDecimal getLow() {
+    public float getLow() {
         return low;
     }
 
-    public void setLow(BigDecimal low) {
+    public void setLow(float low) {
         this.low = low;
     }
 
-    public BigDecimal getVarBid() {
+    public float getVarBid() {
         return varBid;
     }
 
-    public void setVarBid(BigDecimal varBid) {
+    public void setVarBid(float varBid) {
         this.varBid = varBid;
     }
 
-    public BigDecimal getPctChange() {
+    public float getPctChange() {
         return pctChange;
     }
 
-    public void setPctChange(BigDecimal pctChange) {
+    public void setPctChange(float pctChange) {
         this.pctChange = pctChange;
     }
 
-    public BigDecimal getBig() {
+    public float getBig() {
         return big;
     }
 
-    public void setBig(BigDecimal big) {
+    public void setBig(float big) {
         this.big = big;
     }
 
-    public BigDecimal getAsk() {
+    public float getAsk() {
         return ask;
     }
 
-    public void setAsk(BigDecimal ask) {
+    public void setAsk(float ask) {
         this.ask = ask;
     }
 
@@ -131,12 +134,12 @@ public class Moeda {
         this.timestamp = timestamp;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getCreate_date() {
+        return create_date;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreate_date(String create_date) {
+        this.create_date = create_date;
     }
 
     @Override
@@ -152,7 +155,7 @@ public class Moeda {
                 ", big=" + big +
                 ", ask=" + ask +
                 ", timestamp='" + timestamp + '\'' +
-                ", createDate=" + createDate +
+                ", create_date=" + create_date +
                 '}';
     }
 

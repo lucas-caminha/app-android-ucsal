@@ -1,4 +1,4 @@
-package br.com.ucsal.mobile.moedas;
+package br.com.ucsal.mobile.moedas.adapter;
 
 import android.app.Activity;
 import android.view.View;
@@ -6,8 +6,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import br.com.ucsal.mobile.moedas.R;
 import br.com.ucsal.mobile.moedas.model.Moeda;
 
 public class MoedasListAdapter extends BaseAdapter {
@@ -47,14 +52,15 @@ public class MoedasListAdapter extends BaseAdapter {
         TextView high = v.findViewById(R.id.text3);
         TextView low = v.findViewById(R.id.text4);
         TextView var = v.findViewById(R.id.text5);
-
-
+        TextView dtUltimaAtualizacao = v.findViewById(R.id.data_ultima_atualizacao);
 
         codigo.setText("Código:" + moeda.getCode());
         nome.setText("Nome: " + moeda.getName());
         high.setText("Preço mais alto: " + moeda.getHigh());
         low.setText("Preço mais baixo : " + moeda.getLow());
         var.setText("Variação: " + moeda.getVarBid());
+        dtUltimaAtualizacao.setText("Ultima atualização: " + moeda.getCreate_date());
+
 
         return v;
 

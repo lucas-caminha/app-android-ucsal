@@ -3,6 +3,8 @@ package br.com.ucsal.mobile.moedas.infra;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.DateFormat;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -13,7 +15,7 @@ public class RetrofitBuilder {
     public Retrofit build(){
 
         Gson gson = new GsonBuilder()
-                .setDateFormat("dd-MM-yyyy HH:mm:ss")
+                .setDateFormat(DateFormat.FULL)
                 .create();
 
         //.setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")

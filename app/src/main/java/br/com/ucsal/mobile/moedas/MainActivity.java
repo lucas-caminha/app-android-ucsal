@@ -2,12 +2,13 @@ package br.com.ucsal.mobile.moedas;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -15,10 +16,11 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ucsal.mobile.moedas.adapter.MoedasListAdapter;
 import br.com.ucsal.mobile.moedas.endpoint.MoedasEndpoint;
+import br.com.ucsal.mobile.moedas.infra.AppDatabase;
 import br.com.ucsal.mobile.moedas.infra.RetrofitBuilder;
 import br.com.ucsal.mobile.moedas.model.Moeda;
-import br.com.ucsal.mobile.moedas.model.Moedas;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +28,6 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textViewResult;
     private ListView listView;
 
     @Override
@@ -34,13 +35,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //textViewResult = findViewById(R.id.text_view_result);
+        listView = findViewById(R.id.listView);
 
         RetrofitBuilder builder = new RetrofitBuilder();
         Retrofit retrofit = builder.build();
 
         MoedasEndpoint apiMoedas = retrofit.create(MoedasEndpoint.class);
-
         Call<JsonObject> call = apiMoedas.getMoedas();
 
         call.enqueue(new Callback<JsonObject>() {
@@ -48,30 +48,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
-                    //textViewResult.setText("Code: " + response.code());
+                    Toast.makeText(MainActivity.this, response.code(), Toast.LENGTH_SHORT);
                     return;
                 }
 
-                listView = findViewById(R.id.listView);
-
-
                 JsonObject moedasJSON = response.body();
-
                 List<Moeda> moedas = converteJSonToObject(moedasJSON);
 
-                System.out.println("Tamanho da Lista: " + moedas.size());
 
-                MoedasListAdapter adapter = new MoedasListAdapter(moedas,MainActivity.this);
                 //ArrayAdapter adapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,moedas);
+                MoedasListAdapter adapter = new MoedasListAdapter(moedas,MainActivity.this);
                 listView.setAdapter(adapter);
 
-                //textViewResult.setText(moedasJSON.toString());
+                AppDatabase db = AppDatabase.getInstance(MainActivity.this);
+
+                for(Moeda moeda : moedas){
+                    db.moedaDAO().insereMoeda(moeda);
+                }
+
 
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                //textViewResult.setText(t.getMessage());
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT);
             }
         });
 
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         for(String keyStr : moedasJSON.keySet()){
             Object keyValue = moedasJSON.get(keyStr);
             Moeda moeda = g.fromJson(keyValue.toString(), Moeda.class);
+            System.out.println("Moeda: " + moeda.toString());
             moedas.add(moeda);
         }
 
