@@ -28,12 +28,14 @@ public class AsyncMoedaSelect extends AsyncTask<Integer, Integer, Boolean> {
     protected Boolean doInBackground(Integer... integers) {
         this.moedasDB = AppDatabase.getInstance(activity.getApplicationContext()).moedaDAO().buscaTodasMoedas();
 
+        // preenche o banco caso esteja vazio
         if (this.moedasDB == null){
              for(Moeda moeda : moedasAPI){
                 new AsyncMoedaInsert(activity, moeda).execute();
              }
         }
 
+        // compara as datas e atualiza a moeda
         for(int i = 0; i < moedasDB.size(); i++){
 
             for(int j = 0; j < moedasAPI.size(); j++) {

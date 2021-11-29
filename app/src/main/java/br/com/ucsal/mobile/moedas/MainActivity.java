@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ucsal.mobile.moedas.DAO.MoedaDAO;
 import br.com.ucsal.mobile.moedas.adapter.MoedasListAdapter;
 import br.com.ucsal.mobile.moedas.endpoint.MoedasEndpoint;
 import br.com.ucsal.mobile.moedas.infra.AppDatabase;
@@ -21,6 +22,7 @@ import br.com.ucsal.mobile.moedas.infra.RetrofitBuilder;
 import br.com.ucsal.mobile.moedas.model.Moeda;
 import br.com.ucsal.mobile.moedas.task.AsyncMoedaInsert;
 import br.com.ucsal.mobile.moedas.task.AsyncMoedaSelect;
+import br.com.ucsal.mobile.moedas.task.AsyncOfflineSelect;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,7 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT);
+
+                //new AsyncOfflineSelect(moedasDB, MainActivity.this).execute();
+                List<Moeda> moedasDB = AppDatabase.getInstance(MainActivity.this).moedaDAO().buscaTodasMoedas();
+
+                MoedasListAdapter adapter = new MoedasListAdapter(moedasDB,MainActivity.this);
+                listView.setAdapter(adapter);
+
             }
         });
 
